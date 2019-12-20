@@ -246,8 +246,17 @@
                 this.addFlag = 1;
                 row.edit = true;
             },
-            handleDelete(index){
-                this.scoreResult.splice(index,1)
+            handleDelete(index,row){
+                this.$axios.post("/classroom/deleteClassroomCause",{
+                    classroomCauseId:row.classroomCauseId
+                },{headers:{
+                        "X-Auth-Token":this.$cookies.get("user")['X-Auth-Token']
+                    }
+                }).then(res=>{
+                    window.console.log(res);
+                    this.scoreTags.splice(index,1);
+                    this.$message.success("删除功!");
+                })
             },
             submitEdit(index,row){
                 row.edit = false;
@@ -257,6 +266,9 @@
                             "X-Auth-Token":this.$cookies.get("user")['X-Auth-Token']
                         }
                     }).then(res=>{
+                        let id=res.data;
+                        row.classroomCauseId=id;
+                        window.console.log(id);
                         this.$message.success("添加成功!")
                     })
                 }else{

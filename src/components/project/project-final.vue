@@ -43,7 +43,8 @@
                             </el-input>
                         </template>
                         <template slot-scope="scope">
-                            <el-input-number size="mini" :min="0" :max="100" v-model="scope.row.teacher"></el-input-number>
+                            <!--<el-input-number size="mini" :min="0" :max="100" v-model="scope.row.teacher"></el-input-number>-->
+                            <div align="center"><span>{{scope.row.teacher}}</span></div>
                         </template>
                     </el-table-column>
                     <el-table-column
