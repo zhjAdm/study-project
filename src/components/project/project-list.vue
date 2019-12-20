@@ -20,7 +20,7 @@
                             <span>{{project.name}}</span>
                             <el-dropdown style="float: right; padding: 3px 0" v-if="$cookies.get('user').role<4">
                               <span class="el-dropdown-link">
-                                <i class="el-icon-more" style="font-size:24px;color:#000;"/>
+                                <i class="el-icon-more" style="font-size:24px;color:#000;"></i>
                               </span>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item><span @click="getProjectForId(project.id)">编辑</span></el-dropdown-item>

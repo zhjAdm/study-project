@@ -5,8 +5,11 @@
             <el-breadcrumb-item>{{task.name}}</el-breadcrumb-item>
         </el-breadcrumb>
         <br>
-        <div style="background-color: #8492a6;color: #fff;height:35px;line-height: 35px;">
+        <div style="background-color:#D3DCE6;height:35px;line-height: 35px;">
             <span style="margin-left: 20px;">任务详情：</span>
+            <span style="float:right;margin-right: 30px;" v-if="$cookies.get('user').role < 4">
+                    <el-link type="primary" :underline="false" @click="exportStageFile">导出当前任务文件</el-link>
+                </span>
         </div>
         <br>
         <div v-if="$route.query.isLook == undefined" style="padding-left: 26px;">
@@ -38,15 +41,15 @@
                         <el-tag effect="plain">
                             <span style="font-size: 18px;">老师评分:{{u.teacherAppraisal}}</span>
                         </el-tag>
-                        <i v-if="$cookies.get('user').role<4 &&task.status == 1" @click="scorePre(u,'teacher')" style="color: #000;cursor: pointer;font-size: 18px;" class="el-icon-edit-outline"></i>
+                        <i v-if="$cookies.get('user').role<4 &&task.status == 1" @click="scorePre(u,'teacher')" style="color: #000;cursor: pointer;font-size: 18px;" class="el-icon-edit-outline"/>
                     </span>
                     <span v-if="task.appraiseType == 2|| task.appraiseType == 0">
                         <span style="font-size: 18px;">小组评分:{{u.groupAppraisal}}</span>
-                        <i v-if="$cookies.get('user').role==4&&task.status == 1" @click="scorePre(u,'group')" style="color: #000;cursor: pointer;font-size: 18px;" class="el-icon-edit-outline"></i>
+                        <i v-if="$cookies.get('user').role==4&&task.status == 1" @click="scorePre(u,'group')" style="color: #000;cursor: pointer;font-size: 18px;" class="el-icon-edit-outline"/>
                     </span>
                     <span v-if="task.appraiseType == 3 || task.appraiseType == 0">
                         <span style="font-size: 18px;">组内评分:{{u.userAppraisal}}</span>
-                        <i v-if="$cookies.get('user').role==4&&task.status == 1" @click="scorePre(u,'user')" style="color: #000;cursor: pointer;font-size: 18px;" class="el-icon-edit-outline"></i>
+                        <i v-if="$cookies.get('user').role==4&&task.status == 1" @click="scorePre(u,'user')" style="color: #000;cursor: pointer;font-size: 18px;" class="el-icon-edit-outline"/>
                     </span>
                     <span style="margin-left:10px" v-if="task.status == 1&&(task.appraiseType == 3 || task.appraiseType == 0) && ($route.query.ht==1 || $cookies.get('user').role<4)" >
                         <el-link type="info" @click="groupScoreDetail(u,'user')">组内评分详情</el-link>
@@ -62,7 +65,7 @@
                                     {{file.name}}
                                 </a>
                                 <span style="float: right;margin-top:-10px;" v-if="editModel">
-                                    <i class="el-icon-error" style="float:left;cursor:pointer;" @click="removeFileOper(0,u.taskFileNumbers,file,index)" v-if="num.status==0"></i>
+                                    <i class="el-icon-error" style="float:left;cursor:pointer;" @click="removeFileOper(0,u.taskFileNumbers,file,index)" v-if="num.status==0"/>
                                 </span>
                                 <br>
                                 <span >上传者:{{file.author}}</span><br>
@@ -86,7 +89,7 @@
                         <div >
                             <br>
                             <span style="color: #3a8ee6;">导师评价：</span>
-                            <el-divider direction="vertical"></el-divider>
+                            <el-divider direction="vertical"/>
                             <el-button @click="assessScoreOpen(u,num)" size="mini">评价意见</el-button>
 
 
@@ -99,8 +102,8 @@
                 </div>
             </el-card>
         </div>
-        <start-score v-on:reloadData="reloadData" ref="scorePane"></start-score>
-        <look-score ref="getScorePane" v-on:reloadData="reloadData" v-bind:groups="groups"></look-score>
+        <start-score v-on:reloadData="reloadData" ref="scorePane"/>
+        <look-score ref="getScorePane" v-on:reloadData="reloadData" v-bind:groups="groups"/>
         <el-dialog title="评价意见"
                    :visible.sync="assessScoreVir"
                    width="70%">
@@ -108,25 +111,7 @@
                 <editor-bar  v-model="editor.info" :isClear="isClear" :initContent="initContent" ref="editor">
                 </editor-bar>
                 <br><br>
-                <el-dialog title="附件"
-                           :visible.sync="assessScoreFileVir"
-                           width="40%"
-                           append-to-body>
-                    <div v-for="(file,index) in assessFile" :key="index">
-                        <el-card shadow="hover" >
-                            <a :href="Global.baseDownloadUrl+'fileName='+file.name+'&path='+file.path">{{file.name}}</a>
-                            <span style="float: right;margin-top:-10px;" v-if="enclosEditModel">
-                            <i class="el-icon-error" style="float:left;cursor:pointer;" @click="removeFileOper(1,userInfo['assessList'+scoreNum],file,index)"></i>
-                        </span><br>
 
-                        </el-card>
-                    </div><br><br>
-                    <div v-if="$cookies.get('user').role < 4">
-                        <el-button size="mini" @click="teacherUploadPre()">上传附件</el-button>
-                        <el-button size="mini" @click="enclosEditModel=!enclosEditModel" v-if="enclosEditModel==false">管理附件</el-button>
-                        <el-button size="mini" @click="enclosEditModel=!enclosEditModel" v-if="enclosEditModel == true">取消管理</el-button>
-                    </div>
-                </el-dialog>
 
                 <el-button type="success" size="mini" @click="scoreSubmit(2)">通过</el-button>
                 <el-button type="danger" size="mini" @click="scoreSubmit(3)">驳回</el-button>
@@ -136,7 +121,27 @@
                 <div v-html="content" style="white-space:pre-wrap">
                     {{content}}
                 </div>
+                <el-button @click="assessScoreFileVir=true,userInfo=fu,scoreNum=fnum" size="mini">附件</el-button>
             </div>
+            <el-dialog title="附件"
+                       :visible.sync="assessScoreFileVir"
+                       width="40%"
+                       append-to-body>
+                <div v-for="(file,index) in assessFile" :key="index">
+                    <el-card shadow="hover" >
+                        <a :href="Global.baseDownloadUrl+'fileName='+file.name+'&path='+file.path">{{file.name}}</a>
+                        <span style="float: right;margin-top:-10px;" v-if="enclosEditModel">
+                            <i class="el-icon-error" style="float:left;cursor:pointer;" @click="removeFileOper(1,userInfo['assessList'+scoreNum],file,index)"/>
+                        </span><br>
+
+                    </el-card>
+                </div><br><br>
+                <div v-if="$cookies.get('user').role < 4">
+                    <el-button size="mini" @click="teacherUploadPre()">上传附件</el-button>
+                    <el-button size="mini" @click="enclosEditModel=!enclosEditModel" v-if="enclosEditModel==false">管理附件</el-button>
+                    <el-button size="mini" @click="enclosEditModel=!enclosEditModel" v-if="enclosEditModel == true">取消管理</el-button>
+                </div>
+            </el-dialog>
         </el-dialog>
 
         <el-dialog title="上传文件"
@@ -539,6 +544,9 @@
                     }
                 })
             },
+            exportStageFile(){
+                window.open("/api/file/downloadTaskFile?projectId="+this.$route.query.projectId+'&taskId='+this.task.id+'&taskName='+this.task.name);
+            }
         }
     }
 </script>

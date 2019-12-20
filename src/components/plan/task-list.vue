@@ -3,7 +3,7 @@
         <div v-if="showList">
             <div style="width:100%;height:35px;line-height:35px;background:#D3DCE6;">
                 <span style="margin-left:20px;">任务列表</span>
-                <span style="float:right;margin-right: 30px;">
+                <span style="float:right;margin-right: 30px;" v-if="$cookies.get('user').role < 4">
                     <el-link type="primary" :underline="false" @click="exportStageFile">导出当前阶段文件</el-link>
                 </span>
             </div>
@@ -14,7 +14,7 @@
                         <span>{{v.name}}</span>
                         <el-dropdown style="float: right; padding: 3px 0" v-if="$route.query.end==0 &&($route.query.ht==1 || $cookies.get('user').role<4)">
                               <span class="el-dropdown-link">
-                                <i class="el-icon-more" style="font-size:24px;"></i>
+                                <i class="el-icon-more" style="font-size:24px;"/>
                               </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item><span @click="editTaskPre(v)">编辑</span></el-dropdown-item>
@@ -49,9 +49,8 @@
                 </el-card>
             </div>
         </div>
-        <edit-task ref="editTaskCom" v-on:editTask="editTask" v-bind:show="editTaskVisible"></edit-task>
-
-        <task-content ref="taskContent" v-bind:show="show" v-on:showTaskList="showTaskList"></task-content>
+        <edit-task ref="editTaskCom" v-on:editTask="editTask" v-bind:show="editTaskVisible"/>
+        <task-content ref="taskContent" v-bind:show="show" v-on:showTaskList="showTaskList"/>
 
     </div>
 </template>
@@ -219,7 +218,7 @@
                 });
             },
             exportStageFile(){
-                window.open("/api/project/downloadStagesFile?projectId="+this.$route.query.projectId+'&stagesId='+this.stage.id+'&stagesName='+this.stage.name);
+                window.open("/api/file/downloadStagesFile?projectId="+this.$route.query.projectId+'&stagesId='+this.stage.id+'&stagesName='+this.stage.name);
             }
 
         }

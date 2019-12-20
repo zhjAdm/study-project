@@ -8,7 +8,7 @@
             <el-table-column
                     prop="projectName"
                     label="项目名称"
-                    width="220">
+                    width="200">
             </el-table-column>
             <el-table-column
                     prop="number"
@@ -18,12 +18,17 @@
             <el-table-column
                     prop="semester"
                     label="学期"
-                    width="220">
+                    width="190">
             </el-table-column>
             <el-table-column
                     prop="professionalName"
                     label="专业"
-                    width="220">
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="grade"
+                    label="年级"
+                    width="110">
             </el-table-column>
             <el-table-column
                     prop="teacherName"
@@ -47,21 +52,26 @@
         <el-dialog title="编辑项目" :visible.sync="editVir">
             <el-form ref="form" :model="editFormContent" label-width="120px" size="mini">
                 <el-form-item label="项目名称">
-                    <el-input v-model="editFormContent.name"></el-input>
+                    <el-input v-model="editFormContent.projectName" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="项目简介">
                     <el-input v-model="editFormContent.number"></el-input>
                 </el-form-item>
                 <el-form-item label="项目专业">
-                    <el-select v-model="editFormContent.professional" placeholder="请选择">
+                    <el-input v-model="editFormContent.professionalName" :disabled="true"></el-input>
+                </el-form-item>
+
+                <el-form-item label="选择年级" prop="grade">
+                    <el-select v-model="editFormContent.grade" placeholder="请选择">
                         <el-option
-                                v-for="item in professs"
-                                :key="item.professionalId"
-                                :label="item.professionalName"
-                                :value="item.professionalId">
+                                v-for="item in grades"
+                                :key="item"
+                                :label="item"
+                                :value="item">
                         </el-option>
                     </el-select>
                 </el-form-item>
+
                 <el-form-item label="项目操作手册">
                     <el-upload
                             class="upload-demo"
@@ -77,7 +87,7 @@
                 </el-form-item>
 
                 <el-form-item size="large">
-                    <el-button type="primary" @click="setEdit">提交修改</el-button>
+                    <el-button type="primary" @click="setEdit(editFormContent.id)">提交修改</el-button>
                     <el-button @click="editVir=false">取消</el-button>
                 </el-form-item>
             </el-form>
@@ -93,11 +103,19 @@
                 projects:[],
                 editVir:false,
                 editFormContent:{},
-                professs:[]
+                professs:[],
+                grades:[],
             }
         },
         methods:{
             init(){
+                this.$axios.post("/project/getGrade",{},{
+                    headers:{
+                        "X-Auth-Token":this.$cookies.get("user")['X-Auth-Token']
+                    }
+                }).then(res=>{
+                    this.grades=res.data;
+                });
                 this.getAllProjectRelease();
                 this.getProfess();
             },
@@ -148,16 +166,15 @@
                     });
                 });
             },
-            setEdit(){
+            setEdit(id){
 
                 let formData = new FormData()
                 if(this.editFormContent.file != undefined){
                     formData.append("file",this.editFormContent.file)
                 }
-                formData.append("name",this.editFormContent.name)
-                formData.append("professional",this.editFormContent.professional)
-                formData.append("number",this.editFormContent.number)
-                formData.append("semesterId",this.$cookies.get("time").id)
+                formData.append("grade",this.editFormContent.grade);
+                formData.append("number",this.editFormContent.number);
+                formData.append("id",id);
 
                 this.$http.post('/project/reviseProjectModel',formData,{
                         timeout:10000,
@@ -168,18 +185,16 @@
                 ).then(res => {
                     //console.log(res)
                     this.$message({
-                        message: '创建成功',
+                        message: '修改成功',
                         type: 'success'
                     });
-                    this.$refs.form.resetFields();
-                    this.$refs.upload.clearFiles();
-                    this.$refs.uploadCover.clearFiles();
+                    this.editVir = false;
                 }).catch(err => {
                     console.log(err)
                     //this.$message('创建失败,请重试！');
                 })
             },
-            fileChange(file,fileList){
+            fileChange(file){
                 this.editFormContent.file = file.raw;
             },
             uploadSuccess(response, file, fileList){

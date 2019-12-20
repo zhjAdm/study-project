@@ -33,14 +33,9 @@
                     </el-tab-pane>
                 </el-tabs>
                 <div style="margin-top:10px;">
-                    <el-tabs v-model="activeName" tab-position="left" type="border-card" @tab-click="handleClick">
-                        <el-tab-pane label="任务" name="task">
+                 
                             <task-list v-on:editTask="editTask" v-bind:stage="nowPlan" v-on:delTask="delTask" ref="taskList" v-bind:taskList="taskList"></task-list>
-                        </el-tab-pane>
-                        <el-tab-pane label="档案" name="formList">
-                            <form-list ref="formList" v-bind:stageId="nowPlanId"></form-list>
-                        </el-tab-pane>
-                    </el-tabs>
+                       
                 </div>
             </div>
         </div>

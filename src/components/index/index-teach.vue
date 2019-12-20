@@ -44,7 +44,7 @@
                     </div>
                     <hr>
                     <el-card class="box-card">
-                        <div v-for="(o,index) in notices" :key="index" class="text item">
+                        <div v-for="(o,index) in notices" :key="index" >
                             <span style="font-size: 14px;">[{{o.objectName}}公告][{{o.time}}]</span>
                             <el-link href="#"><span @click="lookContent(o)">{{o.name}}</span></el-link>
                             <hr>
@@ -182,9 +182,9 @@
     }
     .el-row {
         margin-bottom: 20px;
-    &:last-child {
+    }
+    .last-child {
          margin-bottom: 0;
-     }
     }
     .el-col {
         border-radius: 4px;

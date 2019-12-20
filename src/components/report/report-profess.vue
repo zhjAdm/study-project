@@ -59,7 +59,7 @@
                         <div v-for="(project,pindex) in p.projects" :key="pindex">
                             项目名称:{{project.name}}
                             <span v-if="project.projectStageList.length == 0">
-                                当前项目没有进度sdfsdf
+                                当前项目没有进度
                             </span>
                             <el-steps v-if="project.projectStageList.length != 0" :active="project.projectStageList.length-1" simple finish-status="success">
                                 <el-step v-for="(stage,index) in project.projectStageList" :key="index" :title="stage.name"></el-step>
@@ -128,7 +128,7 @@
                 })
             },
             exportGroupReport(group){
-                window.open("/api/project/projectGroupLecture?groupId="+group.id,"_blank")
+                window.open("/api/file/projectGroupLecture?groupId="+group.id,"_blank")
             }
         }
     }

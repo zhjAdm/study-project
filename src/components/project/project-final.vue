@@ -27,12 +27,12 @@
                 <el-table-column
                         prop="username"
                         label="学号"
-                        width="110">
+                        width="120">
                 </el-table-column>
                 <el-table-column
                         prop="name"
                         label="姓名"
-                        width="70">
+                        width="80">
                 </el-table-column>
                 <el-table-column :label="'项目过程考核'+(this.score.teacherScale+this.score.projectCourseScale+this.score.groupScale+this.score.userLectureScale)+'%'">
                     <el-table-column width="140">
@@ -78,17 +78,16 @@
 
                     <el-table-column
                             label="个人学习报告"
-                            width="140">
+                            width="130">
                         <template slot="header" slot-scope="scope">
-                            <span>
-                                个人学习报告
-                                <el-input v-model.number="score.userLectureScale" size="mini" width="70px">
-                                    <i slot="suffix">%</i>
-                                </el-input>
-                            </span>
+                            <span>个人学习报告</span>
+                            <el-input v-model.number="score.userLectureScale" size="mini" width="70px">
+                                <i slot="suffix">%</i>
+                            </el-input>
                         </template>
                         <template slot-scope="scope">
-                            <el-input-number size="mini" :min="0" :max="100" v-model="scope.row.userLecture"></el-input-number>
+                            <!--<el-input-number size="mini" :min="0" :max="100" v-model="scope.row.userLecture"></el-input-number>-->
+                            <div align="center"><span>{{scope.row.userLecture}}</span></div>
                         </template>
                     </el-table-column>
                 </el-table-column>
@@ -105,21 +104,22 @@
                         </template>
                         <template slot-scope="scope">
 <!--                            <el-input-number size="mini" :min="0" :max="100" v-model="scope.row.projectShow"></el-input-number>-->
-                            <span style="width: 100%;text-align: center;">{{scope.row.projectShow}}</span>
+                            <div align="center"><span>{{scope.row.projectShow}}</span></div>
                         </template>
                     </el-table-column>
                     <el-table-column
-                            width="140">
+                            width="130px">
                         <template slot="header" slot-scope="scope">
                         <span>
                                 项目报告
-                            <el-input v-model.number="score.projectLectureScale" size="mini" width="100px">
+                            <el-input v-model.number="score.projectLectureScale" size="mini" width="130px">
                                 <i slot="suffix">%</i>
                             </el-input>
                         </span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input-number size="mini" :min="0" :max="100" v-model="scope.row.projectLecture"></el-input-number>
+                            <!--<el-input-number size="mini" :min="0" :max="100" v-model="scope.row.projectLecture"></el-input-number>-->
+                            <div align="center"><span>{{scope.row.projectLecture}}</span></div>
                         </template>
                     </el-table-column>
                 </el-table-column>

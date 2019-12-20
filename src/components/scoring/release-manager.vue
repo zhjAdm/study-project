@@ -86,7 +86,7 @@
                                         <el-button
                                                 size="mini"
                                                 type="danger"
-                                                @click="testPlanDelete(project,scope.$index, scope.row)">删除</el-button>
+                                                @click="testPlanDelete(project,scope.$index, scope.row,project.id)">删除</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -97,7 +97,7 @@
 
         <el-dialog title="编辑考核内容" :visible.sync="testInfoEditVir">
             <el-form ref="form" :model="testInfo" label-width="140px" size="mini">
-                <el-form-item label="选择考核班级">
+                <!--<el-form-item label="选择考核班级">
                     <el-select v-model="testInfo.projectIds" multiple placeholder="请选择">
                         <el-option
                                 v-for="item in nowChildProjects"
@@ -106,9 +106,9 @@
                                 :value="item.id">
                         </el-option>
                     </el-select>
-                </el-form-item>
+                </el-form-item>-->
                 <el-form-item label="考核时间备注">
-                    <el-input v-model="testInfo.time" style=""></el-input>
+                    <el-input v-model="testInfo.time" style=""/>
                 </el-form-item>
                 <el-form-item label="考核评分方案表">
                     <el-select v-model="testInfo.standardId" placeholder="请选择">
@@ -120,7 +120,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="考核地点分配">
+                <!--<el-form-item label="考核地点分配">
                     <el-tag
                             :key="tagIndex"
                             v-for="(tag,tagIndex) in testInfo.list"
@@ -140,23 +140,22 @@
                     >
                     </el-input>
                     <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
-                </el-form-item>
+                </el-form-item>-->
                 <el-form-item label="是否需要小组评审">
-                    <el-checkbox v-model="testInfo.isGroup"></el-checkbox>
+                    <el-checkbox v-model="testInfo.isGroup"/>
                 </el-form-item>
                 <el-form-item label="评审人员分配">
                     <div  v-for="(place,placeIndex) in testInfo.list"  :key="placeIndex">
-                        <el-link type="primary">{{place.room}}</el-link>
-                        <br>
+                        <el-input v-model="place.room"></el-input>
                         <el-link type="success" @click="addAccountPre(place)">+临时评审账号</el-link>
                         <br>
-                        <span v-for="(ac,acIndex) in place.users" :key="acIndex">
+                        <!--<span v-for="(ac,acIndex) in place.users" :key="acIndex">
                             {{ac.username}}&nbsp;
-                            <i class="el-icon-delete" @click="place.users.splice(acIndex,1)"></i>
+                            <i class="el-icon-delete" @click="place.users.splice(acIndex,1)"/>
                             &nbsp;
-                            <i class="el-icon-edit" @click="tempAccount=ac,addTempTeacherVir=true,editUserVir=true"></i>
+                            <i class="el-icon-edit" @click="tempAccount=ac,addTempTeacherVir=true,editUserVir=true"/>
                             <br>
-                        </span>
+                        </span>-->
                         <br>
                         <el-select v-model="place.teacherIds" filterable multiple placeholder="请选择">
                             <el-option
@@ -178,10 +177,10 @@
         <el-dialog :visible.sync="addTempTeacherVir">
             <el-form>
                 <el-form-item label="账号">
-                    <el-input type="" v-model="tempAccount.username" placeholder="请输入账号"></el-input>
+                    <el-input type="" v-model="tempAccount.username" placeholder="请输入账号"/>
                 </el-form-item>
                 <el-form-item label="密码">
-                    <el-input type="password" show-password v-model="tempAccount.password" placeholder="请输入密码"></el-input>
+                    <el-input type="password" show-password v-model="tempAccount.password" placeholder="请输入密码"/>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="addAccount" v-if="editUserVir == false">确定添加</el-button>
@@ -198,6 +197,7 @@
         name: "release-manager",
         data(){
             return{
+                size:"",
                 activeNames:[],
                 editSubmitUrl:"",
                 spstVir:false,
@@ -289,8 +289,15 @@
             },
             //新建考核方案
             testInfoEdit(p){
+                this.size=p.datas.length;
+                for(let i=0;i<this.size;i++){
+                     this.testInfo.list.push({room:"请输入教室"});
+                     window.console.log("12"+i);
+                }
+                window.console.log(this.testInfo.list.length);
                 this.nowProject = p;
-                console.log(p)
+                window.console.log(p);
+                
                 if(this.testForm.length == 0){
                     this.$confirm('系统检测到你当前未设置考核评分表,是否前往添加?', '提示', {
                         confirmButtonText: '确定',
@@ -310,7 +317,7 @@
                         });
                     });
                 }
-                this.testInfo.projectIds = []
+                this.testInfo.projectIds = [];
                 this.nowChildProjects = [];
                 for (let i = 0; i < p.datas.length; i++) {
                     if(p.datas[i].replyStatus == 0){
@@ -370,10 +377,7 @@
 
             //提交考核方案
             submitTestInfo(){
-                if(this.testInfo.projectIds.length==0){
-                    this.$message.error("当前没有考核小组")
-                    return;
-                }
+
                 if(this.testInfo.isGroup == true){
                     this.testInfo.isGroup=1;
                 }else{
@@ -409,7 +413,7 @@
                 this.nowProject = p;
                 this.testInfo = row;
                 //给当前编辑内容添加项目列表
-                this.testInfo.projectIds = []
+                this.testInfo.projectIds = [];
                 this.nowChildProjects = [];
                 for (let i = 0; i < p.datas.length; i++) {
                     if(p.datas[i].replyStatus == 0){
@@ -450,21 +454,22 @@
                 this.testInfo.type = 1;//设置编辑考核方案提交类型
             },
             //考核方案删除
-            testPlanDelete(p,index,row){
+            testPlanDelete(p,index,row,id){
                 this.$confirm('此操作将永久删除该考核方案, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     this.$axios.post("/gradeResult/deleteReply",{
-                        replyId:row.replyId
+                        replyId:row.replyId,
+                        projectModelId:id,
                     },{
                         headers:{
                             "X-Auth-Token":this.$cookies.get("user")['X-Auth-Token']
                         }
                     }).then(res=>{
-                        p.testPlans.splice(index,1)
-                        this.handleChange([p.id])
+                        p.testPlans.splice(index,1);
+                        this.handleChange([p.id]);
                         this.$message.success("删除成功!")
                     })
                 }).catch(() => {
