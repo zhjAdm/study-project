@@ -8,26 +8,30 @@
 <!--            </el-tab-pane>-->
 
             <el-tab-pane label="项目运行" name="info">
-                <project-plan ref="info"></project-plan>
+                <project-plan ref="info"/>
             </el-tab-pane>
             <el-tab-pane label="项目资源" name="totalFile">
-                <total-file ref="totalFile"></total-file>
+                <total-file ref="totalFile"/>
             </el-tab-pane>
             <el-tab-pane label="项目成员" name="student" v-if="$route.query.isLook == undefined">
-                <project-student ref="student"></project-student>
+                <project-student ref="student"/>
             </el-tab-pane>
             <el-tab-pane label="项目评分" v-if="($route.query.ht==1 || $cookies.get('user').role<4)&& $route.query.isLook == undefined" name="score">
-                <project-score ref="score"></project-score>
+                <project-score ref="score"/>
             </el-tab-pane>
             <el-tab-pane label="项目问卷" name="ques">
-                <project-question ref="ques"></project-question>
+                <project-question ref="ques"/>
             </el-tab-pane>
             <el-tab-pane label="项目签到" name="signin" v-if="$cookies.get('user').role<4">
-                <signin ref="signin"></signin>
+                <signin ref="signin"/>
             </el-tab-pane>
             <el-tab-pane label="项目中心" name="center">
-                <project-center ref="center"></project-center>
+                <project-center ref="center"/>
             </el-tab-pane>
+            <el-tab-pane label="项目档案" name="FormList">
+                <form-list ref="FormList"/>
+            </el-tab-pane>
+
         </el-tabs>
     </div>
 </template>
@@ -41,6 +45,7 @@
     import ClassScore from "./score/class-score";
     import TotalFile from "./total-file";
     import ProjectScore from "./score/project-score";
+    import FormList from "../plan/form-list";
     export default {
         name: "project-info",
         data() {
@@ -62,11 +67,13 @@
             this.ht = this.$route.query.ht;
         },
         methods:{
-            handleClick(tab, event) {
+            handleClick(tab) {
+                window.console.log(tab);
                 this.$refs[tab.name].init();
             }
         },
         components:{
+            FormList,
             ProjectScore,
             TotalFile,
             ClassScore,

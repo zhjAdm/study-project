@@ -3,13 +3,14 @@
         <div class="createProjectDiv">
             <el-form ref="form" :model="sizeForm" :rules="rules" label-width="80px" size="mini">
 
-                <el-form-item label="选择项目" prop="projectModelId">
-                    <el-select v-model="sizeForm.projectModelId" placeholder="请选择">
+                <el-form-item label="选择项目" prop="projectModelId" >
+                    <el-select v-model="sizeForm.projectModelId" placeholder="请选择" @change='getValue' >
                         <el-option
                                 v-for="item in nowTimeProject"
                                 :key="item.id"
                                 :label="item.projectName+'—'+item.grade+'级—'+item.professionalName"
-                                :value="item.id">
+                                :value="item.id"
+                                >
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -54,7 +55,7 @@
                             :multiple="false"
                             :on-change="imgChange"
                             :limit="1">
-                        <i class="el-icon-plus"></i>
+                        <i class="el-icon-plus"/>
                     </el-upload>
                 </el-form-item>
 
@@ -149,7 +150,7 @@
                     that.nowTimeProject = res.data;
                 });
                 this.getTeachPack();
-                this.getAllClass();
+                //this.getAllClass();
             },
             getAllClass(){
                 this.$axios.post("/user/getProfessionalClass","",{
@@ -250,6 +251,21 @@
                         window.open(routeData.href, '_blank');
                     }
                 }
+            },
+            getValue(val){
+                window.console.log(val);
+                this.$axios.post("/user/getProfessionalClass",{
+                    projectModelId:val
+                },{
+                    headers:{
+                        "X-Auth-Token":this.$cookies.get("user")['X-Auth-Token']
+                    }
+                }).then(res => {
+                    this.allClass = res.data;
+                }).catch(err => {
+                    window.console.log(err);
+                    this.$message.error("获取班级信息失败!")
+                })
             }
         }
     }

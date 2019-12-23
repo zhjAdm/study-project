@@ -99,7 +99,7 @@
                     }
                 }).then(res => {
                     if(res.code === 0){
-                        this.$message.success("评价成功！")
+                        this.$message.success("评价成功！");
                         this.enterScoreList = [];
                         this.show = false;
                         this.$emit("reloadData")

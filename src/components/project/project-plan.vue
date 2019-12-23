@@ -8,6 +8,7 @@
 <!--                    <el-button @click="deleteNowPlan" style="" type="warning" plain>删除当前阶段</el-button>-->
                     <el-button type="success" plain  style="" @click="editNowPlan">编辑当前阶段</el-button>
                     <el-button type="warning" plain  style="" @click="addTaskPre">添加任务</el-button>
+                    <
                 </div>
                 <br>
                 <el-tabs v-model="nowPlanId" @tab-click="planChange" >
